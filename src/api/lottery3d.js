@@ -18,9 +18,13 @@ export function lottery3dLimit() {
 }
 
 export function addLottery3d(data) {
-  return request({
-    url: "lottery3d/addLottery3d",
-    method: "post",
-    data,
-  });
+  return request.post("lottery3d/addLottery3d", data);
+}
+
+export function getLottery3dInfo() {
+  return request.get("lottery3d/getLottery3dInfo");
+}
+
+export function getAnyGroupByData() {
+  return request.get("lottery3d/getAnyGroupByData");
 }

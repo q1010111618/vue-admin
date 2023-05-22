@@ -11,9 +11,9 @@
           style="width: 100%"
         />
       </el-form-item>
-      <el-form-item>
+      <!-- <el-form-item>
         <el-button type="primary" @click="onSubmit('form')">提交</el-button>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
   </div>
 </template>
@@ -40,6 +40,7 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          // request.post("/book/listByPage", { name: "123" });
           addLottery3d(this.form)
             .then((result) => {
               if (result.code === 200) {

@@ -15,7 +15,7 @@ module.exports = {
   //it is base on https://github.com/vuejs/eslint-config-vue
   rules: {
     "vue/max-attributes-per-line": [
-      2,
+      "warn",
       {
         singleline: 10,
         multiline: {
@@ -63,7 +63,7 @@ module.exports = {
     curly: [2, "multi-line"],
     "dot-location": [2, "property"],
     "eol-last": 0,
-    eqeqeq: ["error", "always", { null: "ignore" }],
+    eqeqeq: ["off", "always", { null: "ignore" }],
     "generator-star-spacing": [
       2,
       {
@@ -223,7 +223,7 @@ module.exports = {
       },
     ],
     "space-before-blocks": [2, "always"],
-    "space-before-function-paren": [2, "never"],
+    "space-before-function-paren": 0,
     "space-in-parens": [2, "never"],
     "space-infix-ops": 2,
     "space-unary-ops": [

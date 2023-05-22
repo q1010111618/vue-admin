@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const service = axios.create({
-  baseURL: "/lotteryweb", // url = base url + request url
+  baseURL: "/other", // url = base url + request url
   timeout: 10000, // request timeout
 });
 
