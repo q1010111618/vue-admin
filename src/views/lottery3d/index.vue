@@ -46,7 +46,33 @@
       element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0.8)"
     />
-
+    <el-divider content-position="left">福彩3D个十百位出奖占比</el-divider>
+    <div style="display: flex">
+      <div
+        id="pieChart"
+        v-loading="loading4"
+        style="width: 33%; height: 400px"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+      />
+      <div
+        id="pieChart2"
+        v-loading="loading5"
+        style="width: 33%; height: 400px"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+      />
+      <div
+        id="pieChart3"
+        v-loading="loading6"
+        style="width: 33%; height: 400px"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+      />
+    </div>
     <el-dialog :visible.sync="dialogFormVisible" title="开奖结果">
       <lottery-form ref="lotteryForm" />
       <div slot="footer" class="dialog-footer">
@@ -83,9 +109,15 @@ export default {
       loading: true,
       loading2: true,
       loading3: true,
+      loading4: true,
+      loading5: true,
+      loading6: true,
       chart: null,
       chart2: null,
       chart3: null,
+      chart4: null,
+      chart5: null,
+      chart6: null,
       dialogFormVisible: false,
     };
   },
@@ -119,6 +151,9 @@ export default {
       this.chart = echarts.init(document.getElementById("barChart"));
       this.chart2 = echarts.init(document.getElementById("lineChart2"));
       this.chart3 = echarts.init(document.getElementById("barChart2"));
+      this.chart4 = echarts.init(document.getElementById("pieChart"));
+      this.chart5 = echarts.init(document.getElementById("pieChart2"));
+      this.chart6 = echarts.init(document.getElementById("pieChart3"));
       this.getComposeSTAT()
         .then((result) => {
           // console.log("result:", result);
@@ -157,41 +192,11 @@ export default {
         .then((result) => {
           const legendData = ["百位", "十位", "个位"];
           const xData = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-          const seriesData = [];
-          console.log("result:", result);
-          const hCount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-          const tCount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-          const oCount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-          result.hundreds.forEach((h) => {
-            hCount[h.num] = h.count;
-          });
-          result.tens.forEach((t) => {
-            tCount[t.num] = t.count;
-          });
-          result.onces.forEach((o) => {
-            oCount[o.num] = o.count;
-          });
-          seriesData.push(
-            {
-              name: "百位",
-              color: "red",
-              data: hCount,
-            },
-            {
-              name: "十位",
-              color: "orange",
-              data: tCount,
-            },
-            {
-              name: "个位",
-              color: "blue",
-              data: oCount,
-            }
-          );
-          console.log("seriesData：", seriesData);
+          // 柱状图
+          const seriesData = this.getSeriesData1(result);
           this.chart3.setOption(
             chartsData.getMultiBarOptionData(
-              "出奖次数统计",
+              "",
               "号码",
               legendData,
               "开奖号码",
@@ -201,10 +206,96 @@ export default {
             )
           );
           this.loading3 = false;
+          // 饼图
+          const pieSeriesData = this.getSeriesData2(result);
+          this.chart4.setOption(
+            chartsData.getPieOptionData(
+              "百位号码",
+              "出奖占比",
+              "开奖号码",
+              pieSeriesData.hData
+            )
+          );
+          this.loading4 = false;
+          this.chart5.setOption(
+            chartsData.getPieOptionData(
+              "十位号码",
+              "出奖占比",
+              "开奖号码",
+              pieSeriesData.tData
+            )
+          );
+          this.loading5 = false;
+          this.chart6.setOption(
+            chartsData.getPieOptionData(
+              "个位号码",
+              "出奖占比",
+              "开奖号码",
+              pieSeriesData.oData
+            )
+          );
+          this.loading6 = false;
         })
         .catch((error) => {
           this.$message.error("获取统计数据出错：" + error.toString());
         });
+    },
+    // 获取饼图所需数据
+    getSeriesData2(result) {
+      const hData = [];
+      const tData = [];
+      const oData = [];
+      result.hundreds.forEach((h) => {
+        hData.push({ value: h.count, name: h.num });
+      });
+      result.tens.forEach((t) => {
+        tData.push({ value: t.count, name: t.num });
+      });
+      result.onces.forEach((o) => {
+        oData.push({ value: o.count, name: o.num });
+      });
+      return {
+        hData: hData,
+        tData: tData,
+        oData: oData,
+      };
+    },
+
+    // 获取多柱状图chart3所需数据
+    getSeriesData1(result) {
+      const seriesData = [];
+      console.log("result:", result);
+      const hCount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      const tCount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      const oCount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      result.hundreds.forEach((h) => {
+        hCount[h.num] = h.count;
+      });
+      result.tens.forEach((t) => {
+        tCount[t.num] = t.count;
+      });
+      result.onces.forEach((o) => {
+        oCount[o.num] = o.count;
+      });
+      seriesData.push(
+        {
+          name: "百位",
+          color: "red",
+          data: hCount,
+        },
+        {
+          name: "十位",
+          color: "orange",
+          data: tCount,
+        },
+        {
+          name: "个位",
+          color: "blue",
+          data: oCount,
+        }
+      );
+      console.log("seriesData：", seriesData);
+      return seriesData;
     },
 
     getComposeSTAT() {

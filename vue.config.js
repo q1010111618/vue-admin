@@ -37,13 +37,6 @@ module.exports = {
       errors: true,
     },
     proxy: {
-      "/other": {
-        changeOrign: true, //开启代理
-        target: "http://localhost:8001", //后端端口
-        pathRewrite: {
-          "^/other": "/other",
-        },
-      },
       "/lotteryweb": {
         changeOrign: true, //开启代理
         target: "http://localhost:8080", //后端端口

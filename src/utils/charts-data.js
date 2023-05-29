@@ -25,6 +25,30 @@ export default {
           data: yData,
           type: "line",
           name: "开奖号码",
+          // 最大最小值
+          markPoint: {
+            data: [
+              {
+                type: "max",
+                name: "最大值",
+                itemStyle: { color: "red" },
+              },
+              {
+                type: "min",
+                name: "最小值",
+                itemStyle: { color: "green" },
+              },
+            ],
+          },
+          markLine: {
+            data: [
+              {
+                type: "average",
+                name: "平均值",
+                itemStyle: { color: "orange" },
+              },
+            ],
+          },
         },
       ],
     };
@@ -188,5 +212,45 @@ export default {
       });
     });
     return OptionsData;
+  },
+
+  // 获取简易饼图数据结构
+  getPieOptionData(title, subtext, seriesName, seriesData) {
+    return {
+      title: {
+        text: title,
+        subtext: subtext,
+        left: "center",
+      },
+      tooltip: {
+        trigger: "item",
+        valueFormatter: (value) => value + "次",
+      },
+      legend: {
+        left: "center",
+        bottom: 10,
+      },
+      series: [
+        {
+          name: seriesName,
+          type: "pie",
+          radius: "50%",
+          data: seriesData,
+          label: {
+            normal: {
+              show: true,
+              formatter: "{b}({d}%)", // 自定义显示格式(b:name, c:value, d:百分比)
+            },
+          },
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: "rgba(0, 0, 0, 0.5)",
+            },
+          },
+        },
+      ],
+    };
   },
 };
