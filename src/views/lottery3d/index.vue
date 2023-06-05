@@ -20,13 +20,10 @@
       </div>
     </div>
     <el-divider content-position="left">福彩3D出奖统计</el-divider>
-    <div
-      id="barChart"
-      v-loading="loading"
-      style="width: 100%; height: 400px"
-      element-loading-text="拼命加载中"
-      element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.8)"
+    <bar-chart
+      v-if="barShow"
+      :chart-data="barChartData"
+      :chart-options="barChartOptions"
     />
     <el-divider content-position="left">福彩3D出奖结果</el-divider>
     <div
@@ -47,32 +44,7 @@
       element-loading-background="rgba(0, 0, 0, 0.8)"
     />
     <el-divider content-position="left">福彩3D个十百位出奖占比</el-divider>
-    <div style="display: flex">
-      <div
-        id="pieChart"
-        v-loading="loading4"
-        style="width: 33%; height: 400px"
-        element-loading-text="拼命加载中"
-        element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(0, 0, 0, 0.8)"
-      />
-      <div
-        id="pieChart2"
-        v-loading="loading5"
-        style="width: 33%; height: 400px"
-        element-loading-text="拼命加载中"
-        element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(0, 0, 0, 0.8)"
-      />
-      <div
-        id="pieChart3"
-        v-loading="loading6"
-        style="width: 33%; height: 400px"
-        element-loading-text="拼命加载中"
-        element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(0, 0, 0, 0.8)"
-      />
-    </div>
+    <pie-chart />
     <el-dialog :visible.sync="dialogFormVisible" title="开奖结果">
       <lottery-form ref="lotteryForm" />
       <div slot="footer" class="dialog-footer">
@@ -95,10 +67,14 @@ import { parseTime } from "@/utils/index.js";
 import chartsData from "@/utils/charts-data";
 import lotteryForm from "./form.vue";
 import { addLottery3d } from "@/api/lottery3d";
+import PieChart from "./echart/pieChart.vue";
+import BarChart from "./echart/barChart.vue";
 
 export default {
   components: {
     lotteryForm,
+    PieChart,
+    BarChart,
   },
   data() {
     return {
@@ -106,18 +82,14 @@ export default {
       compose: "", // 开奖号码
       count: 0, // 数据总量
 
-      loading: true,
+      barChartData: [],
+      barChartOptions: {},
+      barShow: false,
+
       loading2: true,
       loading3: true,
-      loading4: true,
-      loading5: true,
-      loading6: true,
-      chart: null,
       chart2: null,
       chart3: null,
-      chart4: null,
-      chart5: null,
-      chart6: null,
       dialogFormVisible: false,
     };
   },
@@ -148,25 +120,13 @@ export default {
     },
 
     initCharts() {
-      this.chart = echarts.init(document.getElementById("barChart"));
       this.chart2 = echarts.init(document.getElementById("lineChart2"));
       this.chart3 = echarts.init(document.getElementById("barChart2"));
-      this.chart4 = echarts.init(document.getElementById("pieChart"));
-      this.chart5 = echarts.init(document.getElementById("pieChart2"));
-      this.chart6 = echarts.init(document.getElementById("pieChart3"));
-      this.getComposeSTAT()
+      composeSTAT()
         .then((result) => {
-          // console.log("result:", result);
-          var xData = [];
-          var yData = [];
-          result.forEach((element) => {
-            xData.push(element.compose);
-            yData.push(element.count);
-          });
-          this.chart.setOption(
-            chartsData.getBarOptionData(xData, yData, "开奖号码", "开奖次数")
-          );
-          this.loading = false;
+          this.barChartData = result;
+          this.barChartOptions = { xLabel: "开奖号码", yLabel: "开奖次数" };
+          this.barShow = true;
         })
         .catch((error) => {
           this.$message.error("获取统计数据出错：" + error.toString());
@@ -188,7 +148,7 @@ export default {
         .catch((error) => {
           this.$message.error("获取统计数据出错：" + error.toString());
         });
-      this.getAnyGroupByData()
+      getAnyGroupByData()
         .then((result) => {
           const legendData = ["百位", "十位", "个位"];
           const xData = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -206,59 +166,10 @@ export default {
             )
           );
           this.loading3 = false;
-          // 饼图
-          const pieSeriesData = this.getSeriesData2(result);
-          this.chart4.setOption(
-            chartsData.getPieOptionData(
-              "百位号码",
-              "出奖占比",
-              "开奖号码",
-              pieSeriesData.hData
-            )
-          );
-          this.loading4 = false;
-          this.chart5.setOption(
-            chartsData.getPieOptionData(
-              "十位号码",
-              "出奖占比",
-              "开奖号码",
-              pieSeriesData.tData
-            )
-          );
-          this.loading5 = false;
-          this.chart6.setOption(
-            chartsData.getPieOptionData(
-              "个位号码",
-              "出奖占比",
-              "开奖号码",
-              pieSeriesData.oData
-            )
-          );
-          this.loading6 = false;
         })
         .catch((error) => {
           this.$message.error("获取统计数据出错：" + error.toString());
         });
-    },
-    // 获取饼图所需数据
-    getSeriesData2(result) {
-      const hData = [];
-      const tData = [];
-      const oData = [];
-      result.hundreds.forEach((h) => {
-        hData.push({ value: h.count, name: h.num });
-      });
-      result.tens.forEach((t) => {
-        tData.push({ value: t.count, name: t.num });
-      });
-      result.onces.forEach((o) => {
-        oData.push({ value: o.count, name: o.num });
-      });
-      return {
-        hData: hData,
-        tData: tData,
-        oData: oData,
-      };
     },
 
     // 获取多柱状图chart3所需数据
@@ -296,37 +207,6 @@ export default {
       );
       console.log("seriesData：", seriesData);
       return seriesData;
-    },
-
-    getComposeSTAT() {
-      return new Promise((resolve, reject) => {
-        composeSTAT()
-          .then((result) => {
-            if (result.code === 200) {
-              resolve(result.data);
-            } else {
-              reject(result.message);
-            }
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
-    },
-    getAnyGroupByData() {
-      return new Promise((resolve, reject) => {
-        getAnyGroupByData()
-          .then((result) => {
-            if (result.code === 200) {
-              resolve(result.data);
-            } else {
-              reject(result.message);
-            }
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
     },
 
     getLottery3dLimit() {

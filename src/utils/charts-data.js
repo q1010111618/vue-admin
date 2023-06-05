@@ -242,6 +242,30 @@ export default {
               formatter: "{b}({d}%)", // 自定义显示格式(b:name, c:value, d:百分比)
             },
           },
+          itemStyle: {
+            normal: {
+              // 设置颜色数
+              color: function (colors) {
+                var colorList = [
+                  "#FFC0CB",
+                  "#FF1493",
+                  "#7B68EE",
+                  "#0000FF",
+                  "#6495ED",
+                  "#00BFFF",
+                  "#5F9EA0",
+                  "#00FFFF",
+                  "#7FFFD4",
+                  "#2E8B57",
+                  "#7CFC00",
+                  "#FFD700",
+                  "#FFA500",
+                  "#FF4500",
+                ];
+                return colorList[colors.dataIndex];
+              },
+            },
+          },
           emphasis: {
             itemStyle: {
               shadowBlur: 10,

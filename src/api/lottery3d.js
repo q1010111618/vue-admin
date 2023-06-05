@@ -2,13 +2,6 @@
  * 福彩3D相关接口
  */
 import request from "@/utils/request_lottery";
-export function composeSTAT(data) {
-  return request({
-    url: "lottery3d/composeSTAT",
-    method: "post",
-    data,
-  });
-}
 
 export function lottery3dLimit() {
   return request({
@@ -25,6 +18,36 @@ export function getLottery3dInfo() {
   return request.get("lottery3d/getLottery3dInfo");
 }
 
+export function composeSTAT(data) {
+  return new Promise((resolve, reject) => {
+    request
+      .post("lottery3d/composeSTAT", data)
+      .then((result) => {
+        if (result.code === 200) {
+          resolve(result.data);
+        } else {
+          reject(result.message);
+        }
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
 export function getAnyGroupByData() {
-  return request.get("lottery3d/getAnyGroupByData");
+  return new Promise((resolve, reject) => {
+    request
+      .get("lottery3d/getAnyGroupByData")
+      .then((result) => {
+        if (result.code === 200) {
+          resolve(result.data);
+        } else {
+          reject(result.message);
+        }
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
