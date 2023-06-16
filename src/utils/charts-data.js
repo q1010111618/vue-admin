@@ -141,7 +141,7 @@ export default {
           color: "black",
         },
         // 菜单位置
-        x: "right",
+        x: "center",
         // 菜单数据
         data: legendData,
       },

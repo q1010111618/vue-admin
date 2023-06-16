@@ -22,17 +22,16 @@
     <el-divider content-position="left">福彩3D出奖统计</el-divider>
     <bar-chart
       v-if="barShow"
+      :key="dateKey"
       :chart-data="barChartData"
       :chart-options="barChartOptions"
     />
     <el-divider content-position="left">福彩3D出奖结果</el-divider>
-    <div
-      id="lineChart2"
-      v-loading="loading2"
-      style="width: 100%; height: 400px"
-      element-loading-text="拼命加载中"
-      element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.8)"
+    <line-chart
+      v-if="lineShow"
+      :key="dateKey"
+      :chart-data="lineChartData"
+      :chart-options="lineChartOptions"
     />
     <el-divider content-position="left">福彩3D个十百位出奖统计</el-divider>
     <div
@@ -44,7 +43,7 @@
       element-loading-background="rgba(0, 0, 0, 0.8)"
     />
     <el-divider content-position="left">福彩3D个十百位出奖占比</el-divider>
-    <pie-chart />
+    <pie-chart :key="dateKey" />
     <el-dialog :visible.sync="dialogFormVisible" title="开奖结果">
       <lottery-form ref="lotteryForm" />
       <div slot="footer" class="dialog-footer">
@@ -69,12 +68,14 @@ import lotteryForm from "./form.vue";
 import { addLottery3d } from "@/api/lottery3d";
 import PieChart from "./echart/pieChart.vue";
 import BarChart from "./echart/barChart.vue";
+import LineChart from "./echart/lineChart.vue";
 
 export default {
   components: {
     lotteryForm,
     PieChart,
     BarChart,
+    LineChart,
   },
   data() {
     return {
@@ -86,11 +87,16 @@ export default {
       barChartOptions: {},
       barShow: false,
 
-      loading2: true,
+      lineChartData: {},
+      lineChartOptions: {},
+      lineShow: false,
+
       loading3: true,
       chart2: null,
       chart3: null,
       dialogFormVisible: false,
+
+      dateKey: Date.now(), // 用于刷新子组件
     };
   },
   mounted() {
@@ -120,7 +126,6 @@ export default {
     },
 
     initCharts() {
-      this.chart2 = echarts.init(document.getElementById("lineChart2"));
       this.chart3 = echarts.init(document.getElementById("barChart2"));
       composeSTAT()
         .then((result) => {
@@ -140,10 +145,9 @@ export default {
             xData.push(parseTime(new Date(element.time), "{y}-{m}-{d}"));
             yData.push(element.compose);
           });
-          this.chart2.setOption(
-            chartsData.getLineOptionData(xData, yData, "开奖日期", "开奖号码")
-          );
-          this.loading2 = false;
+          this.lineChartData = { xData: xData, yData: yData };
+          this.lineChartOptions = { xLabel: "开奖日期", yLabel: "开奖号码" };
+          this.lineShow = true;
         })
         .catch((error) => {
           this.$message.error("获取统计数据出错：" + error.toString());
@@ -170,6 +174,7 @@ export default {
         .catch((error) => {
           this.$message.error("获取统计数据出错：" + error.toString());
         });
+      this.dateKey = Date.now();
     },
 
     // 获取多柱状图chart3所需数据

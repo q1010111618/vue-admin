@@ -7,7 +7,7 @@ Vue.use(Router);
 import Layout from "@/layout";
 import exampleRoutes from "./modules/example";
 import nestedRoutes from "./modules/nested";
-import lottery3dRoutes from "./modules/lottery3d";
+import lotteryRoutes from "./modules/lottery";
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -76,7 +76,7 @@ export const constantRoutes = [
   },
 
   nestedRoutes,
-  lottery3dRoutes,
+  lotteryRoutes,
 
   {
     path: "external-link",
