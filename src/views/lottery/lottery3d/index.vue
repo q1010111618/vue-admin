@@ -9,6 +9,9 @@
         >
           新增
         </el-button>
+        <el-button type="success" icon="el-icon-refresh" @click="allInit">
+          刷新
+        </el-button>
       </el-button-group>
       <div style="float: right">
         <h3>
