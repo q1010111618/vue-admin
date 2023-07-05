@@ -40,14 +40,15 @@ export default {
   methods: {
     initCharts(result) {
       this.pieChart = echarts.init(document.getElementById("pieChart"));
-      this.pieChart.setOption(
-        chartsData.getPieOptionData(
-          this.chartOptions.title,
-          this.chartOptions.subtext,
-          this.chartOptions.seriesName,
-          result
-        )
+      const options = chartsData.getPieOptionData(
+        this.chartOptions.title,
+        this.chartOptions.subtext,
+        this.chartOptions.seriesName,
+        result,
+        this.chartOptions.legendPos
       );
+      console.log("饼图入参：", options);
+      this.pieChart.setOption(options);
       this.loading = false;
     },
   },

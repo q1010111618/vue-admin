@@ -56,7 +56,7 @@ export default {
           const pieSeriesData = this.getSeriesData2(result);
           this.chart4.setOption(
             chartsData.getPieOptionData(
-              "百位号码",
+              { text: "百位号码", left: "center" },
               "出奖占比",
               "开奖号码",
               pieSeriesData.hData
@@ -65,7 +65,7 @@ export default {
           this.loading4 = false;
           this.chart5.setOption(
             chartsData.getPieOptionData(
-              "十位号码",
+              { text: "十位号码", left: "center" },
               "出奖占比",
               "开奖号码",
               pieSeriesData.tData
@@ -74,7 +74,7 @@ export default {
           this.loading5 = false;
           this.chart6.setOption(
             chartsData.getPieOptionData(
-              "个位号码",
+              { text: "个位号码", left: "center" },
               "出奖占比",
               "开奖号码",
               pieSeriesData.oData

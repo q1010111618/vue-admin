@@ -9,6 +9,9 @@
         >
           新增
         </el-button>
+        <el-button type="success" icon="el-icon-refresh" @click="allInit">
+          刷新
+        </el-button>
       </el-button-group>
       <div style="float: right">
         <h4>
@@ -34,7 +37,7 @@
     <el-divider content-position="left">快乐8各号码开奖比例</el-divider>
     <pie-chart
       v-if="barShow"
-      :key="dateKey"
+      :key="dateKey2"
       :chart-data="pieChartData"
       :chart-options="pieChartOptions"
     />
@@ -77,12 +80,28 @@ export default {
       },
       pieChartData: [],
       pieChartOptions: {
-        title: "出奖号码比例图",
+        title: { text: "出奖号码比例图", left: "right" },
         subtext: "出奖占比",
         seriesName: "开奖号码",
+        legendPos: {
+          orient: "vertical",
+          top: 20,
+          left: 40,
+          itemWidth: 15,
+          itemHeight: 10,
+          itemGap: 25,
+          borderRadius: 4,
+          textStyle: {
+            color: "#000",
+            fontFamily: "Alibaba PuHuiTi",
+            fontSize: 14,
+            fontWeight: 400,
+          },
+        },
       },
 
       dateKey: Date.now(), // 用于刷新子组件
+      dataKey2: Date.now(),
     };
   },
   mounted() {
