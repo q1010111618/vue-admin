@@ -30,14 +30,33 @@
     <el-divider content-position="left">快乐8各号码开奖次数</el-divider>
     <bar-chart
       v-if="barShow"
-      :key="dateKey"
+      :key="dataKey"
       :chart-data="barChartData"
       :chart-options="barChartOptions"
     />
+    <el-divider content-position="left">快乐8各号码总期数比例</el-divider>
+    <div style="display: flex">
+      <div style="width: 50%; height: 600px">
+        <nig-chart
+          v-if="nigShow"
+          :key="dataKey3"
+          :chart-data="nigChartData"
+          :chart-options="nigChartOptions"
+        />
+      </div>
+      <div style="width: 50%; height: 600px">
+        <nig-chart
+          v-if="nigShow"
+          :key="dataKey4"
+          :chart-data="nigChartData2"
+          :chart-options="nigChartOptions"
+        />
+      </div>
+    </div>
     <el-divider content-position="left">快乐8各号码开奖比例</el-divider>
     <pie-chart
       v-if="barShow"
-      :key="dateKey2"
+      :key="dataKey2"
       :chart-data="pieChartData"
       :chart-options="pieChartOptions"
     />
@@ -56,11 +75,13 @@ import lotteryForm from "./form.vue";
 import { parseTime } from "@/utils/index.js";
 import BarChart from "@/components/ECharts/barChart.vue";
 import PieChart from "@/components/ECharts/pieChart.vue";
+import NigChart from "@/components/ECharts/nigChart.vue";
 export default {
   components: {
     lotteryForm,
     BarChart,
     PieChart,
+    NigChart,
   },
   data() {
     return {
@@ -99,9 +120,15 @@ export default {
           },
         },
       },
+      nigShow: false,
+      nigChartData: [], // 热门号码20个
+      nigChartData2: [], // 冷门号码20个
+      nigChartOptions: {},
 
-      dateKey: Date.now(), // 用于刷新子组件
-      dataKey2: Date.now(),
+      dataKey: Date.now() + 1, // 用于刷新子组件
+      dataKey2: Date.now() + 2,
+      dataKey3: Date.now() + 3,
+      dataKey4: Date.now() + 4,
     };
   },
   mounted() {
@@ -111,6 +138,7 @@ export default {
     allInit() {
       this.getHappy8Info();
       this.getHappy8BarChart();
+      this.getHappy8NigChart();
     },
 
     // 获取快乐8柱状图数据
@@ -132,6 +160,35 @@ export default {
           this.$message.error("获取统计结果异常：" + error);
         });
     },
+
+    getHappy8NigChart() {
+      happy8
+        .getHappy8Stat2()
+        .then((result) => {
+          console.log("快乐8开奖结果占比：", result);
+          result.data.forEach((item, index) => {
+            const data = {
+              value: item.ratio,
+              name: "号码：" + item.num,
+              data: item.count,
+            };
+            if (index < 20) {
+              this.nigChartData.push(data);
+            } else if (index > 59) {
+              this.nigChartData2.push(data);
+            }
+          });
+          console.log("热门占比：", this.nigChartData);
+          console.log("冷门占比：", this.nigChartData2);
+
+          // this.barChartOptions = { xLabel: "开奖号码", yLabel: "开奖次数" };
+          this.nigShow = true;
+        })
+        .catch((error) => {
+          this.$message.error("获取统计结果异常：" + error);
+        });
+    },
+
     // 获取快乐8最新一期开奖
     getHappy8Info() {
       happy8

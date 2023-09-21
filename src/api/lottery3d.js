@@ -51,3 +51,20 @@ export function getAnyGroupByData() {
       });
   });
 }
+
+export function getMoreThenOne() {
+  return new Promise((resolve, reject) => {
+    request
+      .post("lottery3d/getMoreThenOne")
+      .then((result) => {
+        if (result.code === 200) {
+          resolve(result.data);
+        } else {
+          reject(result.message);
+        }
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}

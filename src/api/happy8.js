@@ -37,10 +37,28 @@ export default {
     });
   },
 
+  // 获取开奖号码总期数占比
   getHappy8Stat1() {
     return new Promise((resolve, reject) => {
       request
         .get("happy8/getHappy8Stat1")
+        .then((result) => {
+          if (result.code == 200) {
+            resolve(result);
+          } else {
+            reject(result.message);
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  getHappy8Stat2() {
+    return new Promise((resolve, reject) => {
+      request
+        .get("happy8/getHappy8Stat2")
         .then((result) => {
           if (result.code == 200) {
             resolve(result);

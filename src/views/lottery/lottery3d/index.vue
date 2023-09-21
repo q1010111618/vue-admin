@@ -29,6 +29,8 @@
       :chart-data="barChartData"
       :chart-options="barChartOptions"
     />
+    <el-divider content-position="left">福彩3D重复出奖号码及时间</el-divider>
+    <Table />
     <el-divider content-position="left">福彩3D出奖结果</el-divider>
     <line-chart
       v-if="lineShow"
@@ -72,6 +74,7 @@ import { addLottery3d } from "@/api/lottery3d";
 import PieChart from "./echart/pieChart.vue";
 import BarChart from "./echart/barChart.vue";
 import LineChart from "./echart/lineChart.vue";
+import Table from "./table.vue";
 
 export default {
   components: {
@@ -79,6 +82,7 @@ export default {
     PieChart,
     BarChart,
     LineChart,
+    Table,
   },
   data() {
     return {
