@@ -22,4 +22,31 @@ export default {
     b = b < 16 ? "0" + b.toString(16) : b.toString(16);
     return "#" + r + g + b;
   },
+
+  // 20种颜色列表
+  getColorList() {
+    var colorList = [
+      "#FFC0CB",
+      "#FF1493",
+      "#7B68EE",
+      "#0000FF",
+      "#6495ED",
+      "#00BFFF",
+      "#5F9EA0",
+      "#00FFFF",
+      "#7FFFD4",
+      "#2E8B57",
+      "#7CFC00",
+      "#FFD700",
+      "#FFA500",
+      "#FF4500",
+      "#FA8072",
+      "#FF0000",
+      "#B22222",
+      "#DCDCDC",
+      "#A9A9A9",
+      "#696969",
+    ];
+    return colorList;
+  },
 };

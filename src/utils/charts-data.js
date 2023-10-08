@@ -248,32 +248,15 @@ export default {
             normal: {
               // 设置颜色数
               color: function (colors) {
-                var colorList = [];
-                for (let i = 0; i < 80; i++) {
-                  colorList.push(baseUtil.getRandomColor());
+                var colorList = baseUtil.getColorList();
+                // console.log("seriesData:", seriesData);
+                if (seriesData.length > 19) {
+                  for (let i = 0; i < 80; i++) {
+                    colorList.push(baseUtil.getRandomColor());
+                  }
+                  // console.log("colorList:", colorList);
                 }
-                // var colorList = [
-                //   "#FFC0CB",
-                //   "#FF1493",
-                //   "#7B68EE",
-                //   "#0000FF",
-                //   "#6495ED",
-                //   "#00BFFF",
-                //   "#5F9EA0",
-                //   "#00FFFF",
-                //   "#7FFFD4",
-                //   "#2E8B57",
-                //   "#7CFC00",
-                //   "#FFD700",
-                //   "#FFA500",
-                //   "#FF4500",
-                //   "#FA8072",
-                //   "#FF0000",
-                //   "#B22222",
-                //   "#DCDCDC",
-                //   "#A9A9A9",
-                //   "#696969",
-                // ];
+
                 return colorList[colors.dataIndex];
               },
             },

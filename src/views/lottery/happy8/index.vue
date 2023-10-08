@@ -40,6 +40,7 @@
         <nig-chart
           v-if="nigShow"
           :key="dataKey3"
+          chart-id="nigChart1"
           :chart-data="nigChartData"
           :chart-options="nigChartOptions"
         />
@@ -48,8 +49,9 @@
         <nig-chart
           v-if="nigShow"
           :key="dataKey4"
+          chart-id="nigChart2"
           :chart-data="nigChartData2"
-          :chart-options="nigChartOptions"
+          :chart-options="nigChartOptions2"
         />
       </div>
     </div>
@@ -123,7 +125,20 @@ export default {
       nigShow: false,
       nigChartData: [], // 热门号码20个
       nigChartData2: [], // 冷门号码20个
-      nigChartOptions: {},
+      nigChartOptions: {
+        title: {
+          text: "热门号码20个",
+          subtext: "热门号码占比",
+          left: "center",
+        },
+      },
+      nigChartOptions2: {
+        title: {
+          text: "冷门号码20个",
+          subtext: "冷门号码占比",
+          left: "center",
+        },
+      },
 
       dataKey: Date.now() + 1, // 用于刷新子组件
       dataKey2: Date.now() + 2,
