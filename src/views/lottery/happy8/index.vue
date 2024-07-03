@@ -2,15 +2,14 @@
   <div class="app-container">
     <div class="app-header">
       <el-button-group>
-        <el-button
-          type="primary"
-          icon="el-icon-edit"
-          @click="dialogFormVisible = true"
-        >
+        <el-button type="primary" icon="el-icon-edit" @click="addForm">
           新增
         </el-button>
         <el-button type="success" icon="el-icon-refresh" @click="allInit">
           刷新
+        </el-button>
+        <el-button type="primary" icon="el-icon-refresh" @click="search">
+          查询
         </el-button>
       </el-button-group>
       <div style="float: right">
@@ -39,7 +38,7 @@
       <div style="width: 50%; height: 600px">
         <nig-chart
           v-if="nigShow"
-          :key="dataKey3"
+          :key="dataKey"
           chart-id="nigChart1"
           :chart-data="nigChartData"
           :chart-options="nigChartOptions"
@@ -48,7 +47,7 @@
       <div style="width: 50%; height: 600px">
         <nig-chart
           v-if="nigShow"
-          :key="dataKey4"
+          :key="dataKey"
           chart-id="nigChart2"
           :chart-data="nigChartData2"
           :chart-options="nigChartOptions2"
@@ -58,7 +57,7 @@
     <el-divider content-position="left">快乐8各号码开奖比例</el-divider>
     <pie-chart
       v-if="barShow"
-      :key="dataKey2"
+      :key="dataKey"
       :chart-data="pieChartData"
       :chart-options="pieChartOptions"
     />
@@ -69,11 +68,16 @@
         <el-button type="primary" @click="onSubmit()">确 定 </el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :visible.sync="dialogTableVisable" title="查询开奖号码">
+      <lottery-table ref="lotteryTable" />
+    </el-dialog>
   </div>
 </template>
 <script>
 import happy8 from "@/api/happy8";
 import lotteryForm from "./form.vue";
+import lotteryTable from "./table.vue";
 import { parseTime } from "@/utils/index.js";
 import BarChart from "@/components/ECharts/barChart.vue";
 import PieChart from "@/components/ECharts/pieChart.vue";
@@ -81,6 +85,7 @@ import NigChart from "@/components/ECharts/nigChart.vue";
 export default {
   components: {
     lotteryForm,
+    lotteryTable,
     BarChart,
     PieChart,
     NigChart,
@@ -140,20 +145,40 @@ export default {
         },
       },
 
-      dataKey: Date.now() + 1, // 用于刷新子组件
-      dataKey2: Date.now() + 2,
-      dataKey3: Date.now() + 3,
-      dataKey4: Date.now() + 4,
+      dataKey: Date.now(), // 用于刷新子组件
+
+      dialogTableVisable: false,
     };
   },
   mounted() {
     this.allInit();
   },
   methods: {
+    addForm() {
+      this.dialogFormVisible = true;
+      this.$refs.lotteryForm.form = {};
+    },
+
+    search() {
+      this.dialogTableVisable = true;
+    },
+
     allInit() {
+      // 初始化
+      this.barChartData.xData = [];
+      this.barChartData.yData = [];
+      this.pieChartData = [];
+      this.nigChartData = [];
+      this.nigChartData2 = [];
+
+      // 获取数据
       this.getHappy8Info();
       this.getHappy8BarChart();
       this.getHappy8NigChart();
+
+      setTimeout(() => {
+        this.dataKey = Date.now();
+      }, 1000);
     },
 
     // 获取快乐8柱状图数据
@@ -228,6 +253,7 @@ export default {
           this.$message.error("获取开奖结果异常：" + error);
         });
     },
+
     onSubmit() {
       this.$refs["lotteryForm"].$refs["form"].validate((valid) => {
         if (valid) {

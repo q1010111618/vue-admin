@@ -71,4 +71,22 @@ export default {
         });
     });
   },
+
+  // 查询某批号码命中数及对应开奖记录
+  query4Hit(data, hitCount) {
+    return new Promise((resolve, reject) => {
+      request
+        .post("happy8/query4Hit", { num: data, hitCount: hitCount })
+        .then((result) => {
+          if (result.code === 200) {
+            resolve(result.data);
+          } else {
+            reject(result.message);
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };
