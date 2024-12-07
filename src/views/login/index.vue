@@ -73,7 +73,7 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error("Please enter the correct user name"));
+        callback(new Error("Please enter user name"));
       } else {
         callback();
       }
@@ -132,8 +132,10 @@ export default {
               this.$router.push({ path: this.redirect || "/" });
               this.loading = false;
             })
-            .catch(() => {
+            .catch((e) => {
+              console.log("进入到异常流程：" + e);
               this.loading = false;
+              this.$message.error(e);
             });
         } else {
           console.log("error submit!!");

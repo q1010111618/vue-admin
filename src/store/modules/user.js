@@ -32,15 +32,21 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo;
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password })
+      login({ userName: username.trim(), password: password })
         .then((response) => {
-          const { data } = response;
-          commit("SET_TOKEN", data.token);
-          setToken(data.token);
-          resolve();
+          console.log("登录接口回调：", response);
+          if (response.code == 200) {
+            let data = response.data;
+            commit("SET_TOKEN", data.token);
+            setToken(data.token);
+            resolve();
+          } else {
+            reject(response.message);
+          }
         })
         .catch((error) => {
-          resolve(error);
+          console.log("登录接口异常：", error);
+          reject(error);
         });
     });
   },

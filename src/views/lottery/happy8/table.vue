@@ -62,7 +62,10 @@ export default {
   },
   methods: {
     dataCheck(data) {
-      if (this.formInline.nums.indexOf(data) > -1) {
+      let hasNum = this.formInline.nums.split(",").filter((item) => {
+        return item == data;
+      });
+      if (hasNum.length > 0) {
         return true;
       } else {
         return false;
@@ -70,6 +73,7 @@ export default {
     },
 
     queryData() {
+      this.tableData = [];
       this.loading = true;
       const data = this.formInline.nums.split(",");
       happy8
