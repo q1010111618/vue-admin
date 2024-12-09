@@ -32,11 +32,11 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo;
     return new Promise((resolve, reject) => {
-      login({ userName: username.trim(), password: password })
+      login({ username: username.trim(), password: password })
         .then((response) => {
           console.log("登录接口回调：", response);
           if (response.code == 200) {
-            let data = response.data;
+            const data = response.data;
             commit("SET_TOKEN", data.token);
             setToken(data.token);
             resolve();
