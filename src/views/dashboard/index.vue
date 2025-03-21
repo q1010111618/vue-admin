@@ -8,13 +8,13 @@
         <el-button type="primary" icon="el-icon-edit" @click="addForm">
           新增
         </el-button>
-        <el-button type="primary" icon="el-icon-search" @click="getData">
-          查询
+        <el-button type="success" icon="el-icon-refresh" @click="getData">
+          刷新
         </el-button>
       </el-button-group>
     </div>
     <el-divider content-position="left">我的号码</el-divider>
-    <el-table v-loading="loading" :data="tableData" height="500">
+    <el-table v-loading="loading" :data="tableData" height="700">
       <el-table-column label="所选号码" width="400px;">
         <template slot-scope="scope">
           <div

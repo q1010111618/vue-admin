@@ -1,6 +1,17 @@
 <template>
   <div>
     <el-form ref="form" :model="form" label-width="120px">
+      <el-row :gutter="48">
+        <el-col :span="12">
+          <el-form-item label="期数">
+            <el-input v-model="form.code" placeholder="请输入开奖期数" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-button type="primary" @click="getHappyInfo()">获取</el-button>
+        </el-col>
+      </el-row>
+
       <el-form-item label="开奖号码">
         <el-input-number
           v-for="index in 20"
@@ -32,6 +43,9 @@
 </template>
 
 <script>
+import happy8 from "@/api/happy8";
+import baseUtil from "@/utils/base-util";
+
 export default {
   data() {
     return {
@@ -42,6 +56,26 @@ export default {
     handleChange(val) {},
     onSubmit(formName) {
       console.log("this.form:", this.form);
+    },
+
+    getHappyInfo() {
+      if (baseUtil.isEmpty(this.form.code)) {
+        this.$message.error("期数不能为空");
+        return;
+      } else {
+        happy8
+          .getHappy8InfoFormAPI({ code: this.form.code })
+          .then((result) => {
+            console.log("result:", result);
+            result.num.forEach((element, index) => {
+              this.form[`num${index + 1}`] = element;
+            });
+            this.form.time = result.time;
+          })
+          .catch((error) => {
+            this.$message.error("查询开奖结果异常：" + error);
+          });
+      }
     },
   },
 };

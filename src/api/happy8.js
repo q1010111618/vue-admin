@@ -89,4 +89,21 @@ export default {
         });
     });
   },
+
+  getHappy8InfoFormAPI(param) {
+    return new Promise((resolve, reject) => {
+      request
+        .post("happy8/getHappy8InfoFormAPI", param)
+        .then((result) => {
+          if (result.code === 200) {
+            resolve(result.data);
+          } else {
+            reject(result.message);
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 };
